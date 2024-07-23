@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:elevation="10dp"
+        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/white_base"
+        android:paddingHorizontal="10dp">
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/auto_complete_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"/>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/card_result"
+        android:elevation="10dp"
+        app:cardCornerRadius="20dp"
+        android:layout_marginBottom="-20dp"
+        app:cardBackgroundColor="@color/white_base"
+        android:layout_gravity="bottom"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/item_title"
+                android:layout_marginTop="10dp"
+                android:text="@string/identifier_title"
+                android:fontFamily="@font/semibold"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_centerHorizontal="true"/>
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:stretchColumns="3"
+                android:id="@+id/soil_table"
+                android:layout_below="@id/item_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="20dp">
+                <TableRow>
+                    <TextView
+                        android:text="@string/ph"
+                        android:fontFamily="@font/medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/ph_value"
+                        android:layout_width="95dp"
+                        android:text="@string/dummy_value_int"
+                        android:paddingHorizontal="10dp"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:text="@string/natrium"
+                        android:fontFamily="@font/medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/natrium_value"
+                        android:text="@string/dummy_value_int"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:text="@string/fosfor"
+                        android:fontFamily="@font/medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/fosfat_value"
+                        android:text="@string/dummy_value_int"
+                        android:paddingHorizontal="10dp"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:text="@string/kalium"
+                        android:fontFamily="@font/medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/kalium_value"
+                        android:text="@string/dummy_value_int"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:text="@string/bahan_organik2"
+                        android:fontFamily="@font/medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:id="@+id/bo_value"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end"
+                        android:paddingHorizontal="10dp"
+                        android:text="@string/dummy_value_int"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/medium"
+                        android:text="@string/tekstur_tanah2"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/tt_value"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end"
+                        android:text="@string/dummy_value_int"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
+                </TableRow>
+
+                <TableRow>
+                    <TextView
+                        android:text="@string/skl"
+                        android:fontFamily="@font/medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/skl_value"
+                        android:text="@string/dummy_value_int"
+                        android:paddingHorizontal="10dp"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:text="@string/air"
+                        android:fontFamily="@font/medium"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                    <TextView
+                        android:id="@+id/air_value"
+                        android:text="@string/dummy_value_int"
+                        android:fontFamily="@font/medium"
+                        android:gravity="end"
+                        android:textSize="12sp"
+                        android:textColor="@color/black"/>
+                </TableRow>
+            </TableLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/item_title_plant"
+                android:layout_marginTop="10dp"
+                android:text="@string/item_title_plant"
+                android:fontFamily="@font/semibold"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_below="@id/soil_table"
+                android:layout_centerHorizontal="true"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_search"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:listitem="@layout/item_plant"
+                android:elevation="10dp"
+                android:layout_below="@id/item_title_plant"
+                android:layout_marginBottom="20dp"
+                android:paddingHorizontal="10dp"/>
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

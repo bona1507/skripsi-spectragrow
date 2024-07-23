@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "966096908244",
+    "project_id": "spectragrow",
+    "storage_bucket": "spectragrow.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966096908244:android:6fde7b1a2e41919a13f041",
+        "android_client_info": {
+          "package_name": "com.pkmkcub.spectragrow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "966096908244-2v65kv34thg0u6o8i2tigj9eng6ib4ca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pkmkcub.spectragrow",
+            "certificate_hash": "f613e90aa5399ab8c866585183a7bd6cf899286d"
+          }
+        },
+        {
+          "client_id": "966096908244-a9mi4546h5520lom50hubibsbqvcpd0k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pkmkcub.spectragrow",
+            "certificate_hash": "2c3ebb83e0ba4631b38620456e296ed31b293592"
+          }
+        },
+        {
+          "client_id": "966096908244-ontovjfi9oa0bmggd8f8ujq1v361alrg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pkmkcub.spectragrow",
+            "certificate_hash": "e412617465e559a5ba94b4e345a934778547cec8"
+          }
+        },
+        {
+          "client_id": "966096908244-p1q5rg1og554vi9r4250nv2juera9d38.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBV_FNrjVFisLwuOrAvhpRkxLCXDhBL0bs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966096908244-p1q5rg1og554vi9r4250nv2juera9d38.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

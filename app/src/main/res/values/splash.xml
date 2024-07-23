@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Spectragrow.SplashScreen" parent="Theme.SplashScreen.Common">
+        <item name="windowSplashScreenBackground">@color/white_base</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/app_icon</item>
+        <item name="postSplashScreenTheme">@style/Theme.Spectragrow</item>
+        <item name="windowSplashScreenAnimationDuration">2000</item>
+        <item name="android:statusBarColor">@color/yellow_pattern</item>
+    </style>
+</resources>
