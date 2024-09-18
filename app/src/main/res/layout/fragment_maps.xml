@@ -29,7 +29,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="360dp"
         android:id="@+id/card_result"
         android:elevation="10dp"
         app:cardCornerRadius="20dp"
@@ -38,173 +38,183 @@
         android:layout_gravity="bottom"
         android:visibility="gone">
 
-        <RelativeLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/item_title"
-                android:layout_marginTop="10dp"
-                android:text="@string/identifier_title"
-                android:fontFamily="@font/semibold"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:layout_centerHorizontal="true"/>
-
-            <TableLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:stretchColumns="3"
-                android:id="@+id/soil_table"
-                android:layout_below="@id/item_title"
-                android:layout_centerHorizontal="true"
-                android:layout_marginHorizontal="20dp">
-                <TableRow>
-                    <TextView
-                        android:text="@string/ph"
-                        android:fontFamily="@font/medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:id="@+id/ph_value"
-                        android:layout_width="95dp"
-                        android:text="@string/dummy_value_int"
-                        android:paddingHorizontal="10dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:text="@string/natrium"
-                        android:fontFamily="@font/medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:id="@+id/natrium_value"
-                        android:text="@string/dummy_value_int"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                </TableRow>
+                android:layout_height="wrap_content">
 
-                <TableRow>
-                    <TextView
-                        android:text="@string/fosfor"
-                        android:fontFamily="@font/medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:id="@+id/fosfat_value"
-                        android:text="@string/dummy_value_int"
-                        android:paddingHorizontal="10dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:text="@string/kalium"
-                        android:fontFamily="@font/medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:id="@+id/kalium_value"
-                        android:text="@string/dummy_value_int"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                </TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/item_title"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/identifier_title"
+                    android:fontFamily="@font/semibold"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_centerHorizontal="true"/>
 
-                <TableRow>
-                    <TextView
-                        android:text="@string/bahan_organik2"
-                        android:fontFamily="@font/medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="1"
+                    android:id="@+id/soil_table"
+                    android:layout_below="@id/item_title"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginHorizontal="20dp">
 
-                    <TextView
-                        android:id="@+id/bo_value"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:paddingHorizontal="10dp"
-                        android:text="@string/dummy_value_int"
-                        android:textColor="@color/black"
-                        android:textSize="12sp" />
+                    <TableRow>
 
-                    <TextView
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/medium"
-                        android:text="@string/tekstur_tanah2"
-                        android:textColor="@color/black"
-                        android:textSize="12sp" />
-                    <TextView
-                        android:id="@+id/tt_value"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:text="@string/dummy_value_int"
-                        android:textColor="@color/black"
-                        android:textSize="12sp" />
-                </TableRow>
+                        <TextView
+                            android:layout_width="100dp"
+                            android:fontFamily="@font/medium"
+                            android:text="@string/ph"
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/ph_value"
+                            android:text="@string/dummy_value_int"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                    </TableRow>
 
-                <TableRow>
-                    <TextView
-                        android:text="@string/skl"
-                        android:fontFamily="@font/medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:id="@+id/skl_value"
-                        android:text="@string/dummy_value_int"
-                        android:paddingHorizontal="10dp"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:text="@string/air"
-                        android:fontFamily="@font/medium"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                    <TextView
-                        android:id="@+id/air_value"
-                        android:text="@string/dummy_value_int"
-                        android:fontFamily="@font/medium"
-                        android:gravity="end"
-                        android:textSize="12sp"
-                        android:textColor="@color/black"/>
-                </TableRow>
-            </TableLayout>
+                    <TableRow>
+                        <TextView
+                            android:text="@string/natrium"
+                            android:fontFamily="@font/medium"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:id="@+id/natrium_value"
+                            android:text="@string/dummy_value_int"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                    </TableRow>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/item_title_plant"
-                android:layout_marginTop="10dp"
-                android:text="@string/item_title_plant"
-                android:fontFamily="@font/semibold"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:layout_below="@id/soil_table"
-                android:layout_centerHorizontal="true"/>
+                    <TableRow>
+                        <TextView
+                            android:text="@string/fosfor"
+                            android:fontFamily="@font/medium"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:id="@+id/fosfat_value"
+                            android:text="@string/dummy_value_int"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                    </TableRow>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_search"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                tools:listitem="@layout/item_plant"
-                android:elevation="10dp"
-                android:layout_below="@id/item_title_plant"
-                android:layout_marginBottom="20dp"
-                android:paddingHorizontal="10dp"/>
-        </RelativeLayout>
+                    <TableRow>
 
+                        <TextView
+                            android:layout_width="107dp"
+                            android:fontFamily="@font/medium"
+                            android:text="@string/kalium"
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
+                        <TextView
+                            android:id="@+id/kalium_value"
+                            android:text="@string/dummy_value_int"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                    </TableRow>
 
+                    <TableRow>
+                        <TextView
+                            android:text="@string/bahan_organik2"
+                            android:fontFamily="@font/medium"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:id="@+id/bo_value"
+                            android:text="@string/dummy_value_int"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:text="@string/tekstur_tanah2"
+                            android:fontFamily="@font/medium"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:id="@+id/tt_value"
+                            android:text="@string/dummy_value_int"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:text="@string/skl"
+                            android:fontFamily="@font/medium"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:id="@+id/skl_value"
+                            android:text="@string/dummy_value_int"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                    </TableRow>
+
+                    <TableRow>
+                        <TextView
+                            android:text="@string/air"
+                            android:fontFamily="@font/medium"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                        <TextView
+                            android:id="@+id/air_value"
+                            android:text="@string/dummy_value_int"
+                            android:fontFamily="@font/medium"
+                            android:gravity="end"
+                            android:textSize="12sp"
+                            android:textColor="@color/black"/>
+                    </TableRow>
+                </TableLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/item_title_plant"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/item_title_plant"
+                    android:fontFamily="@font/semibold"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_below="@id/soil_table"
+                    android:layout_centerHorizontal="true"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    tools:listitem="@layout/item_plant"
+                    android:elevation="10dp"
+                    android:layout_below="@id/item_title_plant"
+                    android:layout_marginBottom="20dp"
+                    android:paddingHorizontal="10dp"/>
+            </RelativeLayout>
+        </ScrollView>
     </androidx.cardview.widget.CardView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

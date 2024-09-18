@@ -104,15 +104,15 @@
 
             <ImageView
                 android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_height="50dp"
                 android:layout_margin="10dp"
                 android:id="@+id/item_thumbnail"
                 android:importantForAccessibility="no"
                 android:scaleType="centerCrop"
-                android:adjustViewBounds="true"
-                android:background="@drawable/rounded_button"
                 android:layout_below="@id/item_title_fertilizer"
-                android:layout_alignParentStart="true"/>
+                android:layout_alignParentStart="true"
+                android:adjustViewBounds="true"
+                android:layout_gravity="start" />
 
             <TextView
                 android:layout_width="80dp"
@@ -122,7 +122,7 @@
                 android:fontFamily="@font/semibold"
                 android:textSize="12sp"
                 android:layout_marginTop="5dp"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:textColor="@color/black"
                 android:layout_below="@id/item_thumbnail"
                 android:layout_alignStart="@id/item_thumbnail"
@@ -136,7 +136,7 @@
                 android:text="@string/dummy"
                 android:fontFamily="@font/medium_italic"
                 android:textSize="11sp"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:textColor="@color/black"
                 android:layout_below="@id/item_title_id"
                 android:layout_alignStart="@id/item_thumbnail"
@@ -349,6 +349,5 @@
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

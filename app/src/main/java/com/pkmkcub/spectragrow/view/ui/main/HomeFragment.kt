@@ -18,6 +18,7 @@ import com.pkmkcub.spectragrow.model.Plant
 import com.pkmkcub.spectragrow.databinding.FragmentHomeBinding
 import com.pkmkcub.spectragrow.view.adapter.PlantAdapter
 import com.pkmkcub.spectragrow.view.ui.auth.AuthViewModel
+import java.util.Locale
 
 class HomeFragment : Fragment(), PlantAdapter.OnItemClickListener {
 
@@ -62,6 +63,7 @@ class HomeFragment : Fragment(), PlantAdapter.OnItemClickListener {
                 }
                 plantAdapter.setOriginalPlantList(plantList)
                 plantAdapter.submitList(plantList)
+                bindItem(plantList.first())
             }
             .addOnFailureListener { exception ->
                 Log.e("Plant Item", "Error fetching plants", exception)
@@ -111,18 +113,22 @@ class HomeFragment : Fragment(), PlantAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(item: Plant) {
+        bindItem(item)
+    }
+
+    private fun bindItem(item: Plant) {
         binding.apply {
             itemTitleId.text = item.name
             itemTitleLt.text = item.nama_lt
             fertilizerDetail.text = item.fertilizer
-            phValue.text = item.pH.toString()
+            phValue.text = String.format(Locale.getDefault(), "%.2f", item.pH)
             fosfatValue.text = item.fosfat
             natriumValue.text = item.natrium
             kaliumValue.text = item.kalium
             boValue.text = item.bahan_organik
             sklValue.text = item.skl
             ttValue.text = item.tekstur_tanah
-            kaValue.text = item.kadar_air.toString()
+            kaValue.text = String.format(Locale.getDefault(), "%.2f", item.kadar_air)
             itemThumbnail.load(item.photo_url)
         }
     }

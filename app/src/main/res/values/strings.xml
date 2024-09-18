@@ -39,7 +39,7 @@
     <string name="fertilizer_detail">Lorem ipsum dolor sit amet, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
     <string name="input_plant">\tMasukan nama tanaman</string>
     <string name="dummy">Lorem ipsum</string>
-    <string name="dummy_value_int">7</string>
+    <string name="dummy_value_int">N/A</string>
     <string name="item_thumbnail">Gambar untuk tanaman</string>
     <string name="story_thumbnail">Gambar untuk cerita pengguna</string>
     <string name="camera">Kamera</string>
@@ -61,6 +61,6 @@
     <string name="password_not_match">Konfirmasi kata sandi tidak sesuai</string>
     <string name="item_title_plant">Rekomendasi tanaman</string>
     <string name="identifier_title">Karakteristik tanah</string>
-    <string name="bahan_organik2">Bahan\norganik</string>
-    <string name="tekstur_tanah2">Tekstur\ntanah</string>
+    <string name="bahan_organik2">Bahan organik</string>
+    <string name="tekstur_tanah2">Tekstur tanah</string>
 </resources>

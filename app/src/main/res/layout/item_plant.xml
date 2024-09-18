@@ -29,32 +29,21 @@
                 android:layout_alignParentTop="true"
                 android:contentDescription="@string/item_thumbnail"/>
 
-            <TextView
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/title_id"
-                android:text="@string/dummy"
-                android:fontFamily="@font/semibold"
-                android:textSize="12sp"
-                android:textColor="@color/black"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/item_thumbnail"
-                android:gravity="center"
-                android:maxLines="1"/>
 
             <TextView
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/title_lt"
+                android:id="@+id/title_id"
                 android:text="@string/dummy"
                 android:layout_marginHorizontal="10dp"
-                android:fontFamily="@font/medium_italic"
+                android:fontFamily="@font/medium"
                 android:textSize="11sp"
                 android:maxLines="2"
                 android:minLines="2"
                 android:textColor="@color/black"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@id/title_id"
+                android:layout_below="@id/item_thumbnail"
+                android:layout_marginBottom="5dp"
                 android:gravity="center"/>
 
         </RelativeLayout>

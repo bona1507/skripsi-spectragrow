@@ -17,6 +17,7 @@ class PlantAdapter(private val listener: OnItemClickListener) :
 
     fun setOriginalPlantList(plantList: List<Plant>) {
         originalPlantList = plantList
+        submitList(originalPlantList)
     }
 
     fun filterPlants(text: String) {
@@ -29,7 +30,6 @@ class PlantAdapter(private val listener: OnItemClickListener) :
         }
         submitList(filteredList)
     }
-
 
     interface OnItemClickListener {
         fun onItemClick(item: Plant)
@@ -63,7 +63,6 @@ class PlantAdapter(private val listener: OnItemClickListener) :
         fun bind(item: Plant) {
             binding.apply {
                 titleId.text = item.name
-                titleLt.text = item.nama_lt
                 itemThumbnail.load(item.photo_url)
             }
         }
