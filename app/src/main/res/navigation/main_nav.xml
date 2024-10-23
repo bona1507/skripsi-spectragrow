@@ -102,8 +102,22 @@
         android:label="fragment_maps"
         tools:layout="@layout/fragment_maps">
         <action
+            android:id="@+id/action_maps_to_home"
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <action
             android:id="@+id/action_maps_to_detailStory"
             app:destination="@id/detailStoryFragment"
+            app:enterAnim="@anim/slide_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out"/>
+        <action
+            android:id="@+id/action_maps_to_detailsItem"
+            app:destination="@id/detailsItemFragment"
             app:enterAnim="@anim/slide_in"
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
@@ -153,6 +167,13 @@
         <argument
             android:name="story"
             app:argType="com.pkmkcub.spectragrow.model.Story" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailsItemFragment"
+        android:name="com.pkmkcub.spectragrow.view.ui.detailsitem.DetailsItemFragment"
+        android:label="fragment_details_item"
+        tools:layout="@layout/fragment_detail_story">
     </fragment>
 
 </navigation>

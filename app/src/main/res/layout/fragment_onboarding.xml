@@ -197,6 +197,8 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginBottom="-20dp"
+        android:background="@color/white"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="20dp"
         app:cardElevation="20dp"
         app:layout_constraintBottom_toBottomOf="parent"

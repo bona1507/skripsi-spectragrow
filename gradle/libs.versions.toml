@@ -1,5 +1,5 @@
 [versions]
-agp = "8.6.1"
+agp = "8.7.0-rc01"
 coil = "2.6.0"
 coreTesting = "2.2.0"
 credentials = "1.5.0-alpha02"
@@ -24,6 +24,8 @@ coreSplashscreen = "1.0.1"
 navigationFragmentKtx = "2.7.7"
 navigationUiKtx = "2.7.7"
 places = "3.5.0"
+rules = "1.6.1"
+runner = "1.6.1"
 swiperefreshlayout = "1.1.0"
 googleid = "1.1.1"
 koinAndroid = "3.5.6"
@@ -35,9 +37,17 @@ navigationFragment = "2.7.7"
 mockitoCore = "5.6.0"
 mockitoInline = "5.2.0"
 junitJupiter = "5.8.1"
+volley = "1.2.1"
+junitJunit = "4.12"
+espressoContrib = "3.6.1"
+uiautomator = "2.3.0"
+espressoIntents = "3.6.1"
 
 [libraries]
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
+androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
+firebase-perf = { module = "com.google.firebase:firebase-perf" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
@@ -73,6 +83,11 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationFragment" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+volley = { module = "com.android.volley:volley", version.ref = "volley" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+androidx-espresso-contrib = { group = "androidx.test.espresso", name = "espresso-contrib", version.ref = "espressoContrib" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
+androidx-espresso-intents = { group = "androidx.test.espresso", name = "espresso-intents", version.ref = "espressoIntents" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -17,6 +17,9 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -66,15 +69,18 @@ class MapsFragment : Fragment(), PlantAdapter.OnItemClickListener {
         fetchAllStoryData()
         setupRecyclerView()
         mMap.setOnMapLongClickListener { latLng ->
+            fetchPlantDataByLocation(latLng)
             clearRegularMarkers()
             regularMarkers.add(mMap.addMarker(MarkerOptions().position(latLng))!!)
-            fetchPlantDataByLocation(latLng)
-            binding.cardResult.apply {
+            binding.resultSection.apply {
                 visibility = View.VISIBLE
                 startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up))
             }
         }
-        mMap.setOnMapClickListener { clearRegularMarkers(); binding.cardResult.visibility = View.GONE }
+        mMap.setOnMapClickListener {
+            clearRegularMarkers()
+            binding.resultSection.visibility = View.GONE
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -90,6 +96,9 @@ class MapsFragment : Fragment(), PlantAdapter.OnItemClickListener {
         placesClient = Places.createClient(requireActivity())
         (childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?)?.getMapAsync(callback)
         setupAutocomplete()
+        binding.fabAction.setOnClickListener {
+            findNavController().navigate(R.id.action_maps_to_detailsItem)
+        }
     }
 
     private fun setupAutocomplete() {
@@ -97,7 +106,7 @@ class MapsFragment : Fragment(), PlantAdapter.OnItemClickListener {
         autocomplete.setPlaceFields(listOf(Place.Field.ID, Place.Field.ADDRESS, Place.Field.LAT_LNG))
         autocomplete.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onError(status: Status) {
-                Toast.makeText(requireContext(), status.statusMessage, Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), status.statusMessage ?: "An error occurred while selecting the place", Toast.LENGTH_SHORT).show()
             }
 
             override fun onPlaceSelected(place: Place) {
@@ -135,6 +144,9 @@ class MapsFragment : Fragment(), PlantAdapter.OnItemClickListener {
         val radiusInMeters = 5000.0
         var nearestDocument: DocumentSnapshot? = null
         var nearestDistance = Double.MAX_VALUE
+
+        fetchElevation(latLng)
+        fetchCurrentTemperature(latLng)
 
         plantList.clear()
         plantAdapter.setOriginalPlantList(emptyList())
@@ -183,7 +195,6 @@ class MapsFragment : Fragment(), PlantAdapter.OnItemClickListener {
                                             val plantResult = plantDocument.toObject(Plant::class.java)
                                             plantResult?.let {
                                                 tempPlantList.add(it)
-                                                // Update the adapter after adding all plants
                                                 if (tempPlantList.size == list.size) {
                                                     plantList.clear()
                                                     plantList.addAll(tempPlantList)
@@ -201,6 +212,9 @@ class MapsFragment : Fragment(), PlantAdapter.OnItemClickListener {
                         }
                     }
                 } else {
+                    binding.resultSection.apply {
+                        visibility = View.GONE
+                    }
                     Toast.makeText(requireContext(), "Lokasi ini belum berhasil terdeteksi", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -234,6 +248,44 @@ class MapsFragment : Fragment(), PlantAdapter.OnItemClickListener {
             adapter = plantAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         }
+    }
+
+    private fun fetchElevation(latLng: LatLng) {
+        val apiKey = BuildConfig.MAPS_API_KEY
+        val url = "https://maps.googleapis.com/maps/api/elevation/json?locations=${latLng.latitude},${latLng.longitude}&key=$apiKey"
+
+        val request = JsonObjectRequest(
+            Request.Method.GET, url, null,
+            { response ->
+                val results = response.getJSONArray("results")
+                if (results.length() > 0) {
+                    val elevation = results.getJSONObject(0).getDouble("elevation")
+                    binding.elevation.text = String.format("%.2f", elevation) + " mdpl"
+                }
+            },
+            { error ->
+                Log.e("Elevation Fetch", "Error fetching elevation", error)
+            }
+        )
+
+        Volley.newRequestQueue(requireContext()).add(request)
+    }
+
+    private fun fetchCurrentTemperature(latLng: LatLng) {
+        val url = "https://api.open-meteo.com/v1/forecast?latitude=${latLng.latitude}&longitude=${latLng.longitude}&current=temperature_2m"
+
+        val request = JsonObjectRequest(Request.Method.GET, url, null,
+            { response ->
+                val current = response.getJSONObject("current")
+                val temperature = current.getDouble("temperature_2m")
+                binding.temp.text = temperature.toString() + "°C"
+            },
+            { error ->
+                Log.e("Weather Fetch", "Error fetching weather", error)
+            }
+        )
+
+        Volley.newRequestQueue(requireContext()).add(request)
     }
 
     companion object {

@@ -113,7 +113,11 @@ class AuthViewModel(
             .addOnCompleteListener(activity) { task ->
                 if (task.isSuccessful) {
                     Log.d("AuthViewModel", "signInWithCredential:success")
-                    navController.navigate(R.id.action_onboarding_to_home)
+                    if (navController.currentDestination?.id == R.id.onboardingFragment) {
+                        navController.navigate(R.id.action_onboarding_to_home)
+                    } else if (navController.currentDestination?.id == R.id.mapsFragment) {
+                        navController.navigate(R.id.action_maps_to_home)
+                    }
                 } else {
                     Log.w("AuthViewModel", "signInWithCredential:failure", task.exception)
                 }

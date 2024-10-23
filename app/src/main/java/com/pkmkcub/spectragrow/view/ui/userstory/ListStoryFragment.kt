@@ -63,7 +63,7 @@ class ListStoryFragment : Fragment(), StoryAdapter.OnItemClickListener {
 
     private fun setupUi() {
         binding.apply {
-            addStoryBtn.setOnClickListener {
+            newStoryBtn.setOnClickListener {
                 findNavController().navigate(R.id.action_listStory_to_addStory)
             }
         }

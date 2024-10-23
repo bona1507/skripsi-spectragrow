@@ -10,7 +10,7 @@
 
     <item
         android:id="@+id/maps_btn"
-        android:icon="@drawable/map"
+        android:icon="@drawable/location"
         app:showAsAction="ifRoom"
         android:title="@string/maps_btn" />
 

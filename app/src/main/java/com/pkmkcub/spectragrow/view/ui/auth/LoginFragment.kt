@@ -1,22 +1,24 @@
 package com.pkmkcub.spectragrow.view.ui.auth
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.pkmkcub.spectragrow.R
 import com.pkmkcub.spectragrow.databinding.FragmentLoginBinding
+import com.pkmkcub.spectragrow.view.ui.auth.LoginFragmentDirections
 
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private val viewModel: AuthViewModel by viewModels()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +42,7 @@ class LoginFragment : Fragment() {
                 handleForgotPassword()
             }
             tvRegister.setOnClickListener {
-                findNavController().navigate(R.id.action_login_to_register)
+                findNavController().navigate(LoginFragmentDirections.actionLoginToRegister())
             }
         }
     }
@@ -51,26 +53,22 @@ class LoginFragment : Fragment() {
         when {
             email.isEmpty() || password.isEmpty() -> {
                 showToast(R.string.field_empty)
-                return
             }
             !binding.etEmail.isEmailValid -> {
                 showToast(R.string.incorrect_email_format)
-                return
             }
             !binding.etPassword.isPasswordValid -> {
                 showToast(R.string.incorrect_pw_format)
-                return
             }
             !binding.snkCheck.isChecked -> {
                 showToast(R.string.snk_uncheck)
-                return
             }
             else -> {
                 binding.progressBar.isVisible = true
                 viewModel.login(email, password) { success ->
                     binding.progressBar.isVisible = false
                     if (success) {
-                        findNavController().navigate(R.id.action_login_to_home)
+                        navigateToHome()
                     } else {
                         showToast(R.string.email_password_incorrect)
                     }
@@ -78,6 +76,18 @@ class LoginFragment : Fragment() {
             }
         }
     }
+
+    private fun navigateToHome() {
+        Handler(Looper.getMainLooper()).post {
+            if (isAdded) {
+                val action = LoginFragmentDirections.actionLoginToHome()
+                findNavController().navigate(action)
+            } else {
+                showToast(R.string.login_fragment_title)
+            }
+        }
+    }
+
 
     private fun handleForgotPassword() {
         val email = binding.etEmail.text.toString()
@@ -92,6 +102,8 @@ class LoginFragment : Fragment() {
     }
 
     private fun showToast(messageResId: Int) {
-        Toast.makeText(requireContext(), getString(messageResId), Toast.LENGTH_SHORT).show()
+        context?.let {
+            Toast.makeText(it, getString(messageResId), Toast.LENGTH_SHORT).show()
+        }
     }
 }
