@@ -15,7 +15,7 @@
     <string name="email_form">Surel</string>
     <string name="password_form">Kata sandi</string>
     <string name="forgot_pw">Lupa kata sandi</string>
-    <string name="snk">Saya menyetujui syarat dan ketentuan \nyang berlaku.</string>
+    <string name="snk">Saya menyetujui syarat dan ketentuan yang berlaku.</string>
     <string name="dont_have_an_account">Belum memiliki akun?</string>
     <string name="tv_register">Daftar sekarang</string>
     <string name="have_an_account">Sudah memiliki akun?</string>
@@ -63,7 +63,6 @@
     <string name="item_title_plant">Rekomendasi tanaman</string>
     <string name="identifier_title">Karakteristik tanah</string>
     <string name="bahan_organik2">Bahan organik</string>
-    <string name="tekstur_tanah2">Tekstur tanah</string>
     <string name="ph_details"><b>Pengaruh terhadap produktivitas:</b> \npH optimal untuk sebagian besar tanaman berada pada kisaran 6–7, di mana unsur hara esensial paling tersedia. Tanah yang terlalu asam atau basa bisa menyebabkan defisiensi nutrisi, menghambat pertumbuhan, dan menurunkan hasil panen. (Data memiliki range 0 sampai 14, dengan 7 sebagai asam, 7 netral, dan >7 sebagai basa). Data ini didapatkan berasal dari pantulan panjang gelombang satelit sentinel-2A</string>
     <string name="n_details"><b>Pengaruh terhadap produktivitas:</b> \nMeningkatkan pertumbuhan daun dan batang yang sehat, sehingga tanaman dapat menangkap lebih banyak cahaya matahari dan berfotosintesis secara efisien. (Data dalam satuan parts per million (ppm)). Data ini didapatkan berasal dari pantulan panjang gelombang satelit sentinel-2A</string>
     <string name="p_details"><b>Pengaruh terhadap produktivitas:</b> \nMembantu pengembangan sistem akar yang kuat dan memperbaiki kemampuan tanaman untuk menyerap nutrisi dan air, yang akhirnya meningkatkan hasil panen. (Data dalam satuan parts per million (ppm)). Data ini didapatkan berasal dari pantulan panjang gelombang satelit sentinel-2A</string>

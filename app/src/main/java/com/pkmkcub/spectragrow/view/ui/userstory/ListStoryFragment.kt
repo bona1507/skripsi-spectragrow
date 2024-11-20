@@ -1,76 +1,123 @@
 package com.pkmkcub.spectragrow.view.ui.userstory
 
-import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.firestore.FirebaseFirestore
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import com.pkmkcub.spectragrow.R
-import com.pkmkcub.spectragrow.databinding.FragmentListStoryBinding
 import com.pkmkcub.spectragrow.model.Story
-import com.pkmkcub.spectragrow.view.adapter.StoryAdapter
 
-class ListStoryFragment : Fragment(), StoryAdapter.OnItemClickListener {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ListStoryScreen(
+    onAddStory: () -> Unit,
+    onStoryClick: (Story) -> Unit,
+    viewModel: StoryViewModel = viewModel()
+) {
+    val stories by viewModel.storyList.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
-    private lateinit var binding: FragmentListStoryBinding
-    private lateinit var firestore: FirebaseFirestore
-    private lateinit var storyAdapter: StoryAdapter
-    private var storyList = mutableListOf<Story>()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentListStoryBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        firestore = FirebaseFirestore.getInstance("plant")
-        setupRecyclerView()
-        fetchAllPlantData()
-        setupUi()
-    }
-
-    private fun setupRecyclerView() {
-        storyAdapter = StoryAdapter(this)
-        binding.rvMain.apply {
-            adapter = storyAdapter
-            layoutManager = LinearLayoutManager(context)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(id = R.color.yellow_pattern),
+                    titleContentColor = colorResource(id = R.color.white_base),
+                ),
+                title = {
+                    Text(text = "Berbagi Cerita Pertanian", fontFamily = FontFamily(Font(R.font.bold)), color = colorResource(id = R.color.white_base))
+                },
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onAddStory, containerColor = colorResource(id = R.color.yellow_pattern)) {
+                Icon(Icons.Default.Add, contentDescription = "Add Story", tint = colorResource(id = R.color.white_base))
+            }
         }
-    }
-
-    private fun fetchAllPlantData() {
-        firestore.collection("stories")
-            .get()
-            .addOnSuccessListener { result ->
-                storyList.clear()
-                for (document in result) {
-                    val story = document.toObject(Story::class.java)
-                    storyList.add(story)
+    ) { paddingValues ->
+        Image(
+            painter = painterResource(id = R.drawable.ob_bg),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+        Box(modifier = Modifier.padding(paddingValues)) {
+            if (isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            } else {
+                LazyColumn {
+                    items(stories) { story ->
+                        StoryItem(story, onStoryClick)
+                    }
                 }
-                storyAdapter.submitList(storyList)
-            }
-            .addOnFailureListener { exception ->
-                Log.e("Plant Item", "Error fetching plants", exception)
-            }
-    }
-
-    private fun setupUi() {
-        binding.apply {
-            newStoryBtn.setOnClickListener {
-                findNavController().navigate(R.id.action_listStory_to_addStory)
             }
         }
     }
+}
 
-    override fun onItemClick(item: Story) {
-        val action = ListStoryFragmentDirections.actionListStoryToDetailStory(item)
-        findNavController().navigate(action)
+@Composable
+fun StoryItem(story: Story, onStoryClick: (Story) -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { onStoryClick(story) },
+        elevation = CardDefaults.elevatedCardElevation(4.dp),
+        colors = CardDefaults.cardColors(colorResource(id = R.color.white))
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxWidth()
+                .aspectRatio(1.5f)
+                .clip(RoundedCornerShape(8.dp))
+        ) {
+            Image(
+                painter = rememberAsyncImagePainter(story.photo_url),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = story.title, color = colorResource(id = R.color.black),
+                fontFamily = FontFamily(Font(R.font.semibold))
+            )
+            Text(text = story.content, color = colorResource(id = R.color.black),
+                fontFamily = FontFamily(Font(R.font.medium)))
+        }
     }
 }

@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Keep
 @Parcelize
-data class Story (
+data class Story(
     val photo_url: String = "",
     val title: String = "",
     val content: String = "",

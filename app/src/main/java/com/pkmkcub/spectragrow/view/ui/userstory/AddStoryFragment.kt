@@ -1,263 +1,272 @@
 package com.pkmkcub.spectragrow.view.ui.userstory
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Geocoder
+import android.location.Location
 import android.net.Uri
-import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
-import android.util.Log
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
-import androidx.navigation.fragment.findNavController
-import coil.load
-import com.google.android.gms.location.FusedLocationProviderClient
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.location.LocationServices
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.pkmkcub.spectragrow.R
-import com.pkmkcub.spectragrow.databinding.FragmentAddStoryBinding
 import com.pkmkcub.spectragrow.model.Story
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import kotlinx.coroutines.launch
 
-private const val IMAGE_TYPE = "image/*"
 
-class AddStoryFragment : Fragment() {
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@Composable
+fun AddStoryScreen(
+    viewModel: StoryViewModel = viewModel(),
+    onNavigateToListStory: () -> Unit
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
-    private lateinit var binding: FragmentAddStoryBinding
-    private val firestore = FirebaseFirestore.getInstance("plant")
-    private val storage = FirebaseStorage.getInstance()
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var currentLatitude: Double = 0.0
-    private var currentLongitude: Double = 0.0
-    private var selectedImageUri: Uri? = null
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var isUploading by remember { mutableStateOf(false) }
+    var currentLocation by remember { mutableStateOf<Location?>(null) }
 
-    private val launcherGallery = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let {
-            selectedImageUri = it
-            binding.ivPreview.load(it)
-        }
-    }
+    val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
 
-    private val launcherCamera = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            selectedImageUri?.let {
-                binding.ivPreview.load(it)
-            }
-        }
-    }
+    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
-    private val requestCameraPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            openCamera()
-        } else {
-            Log.d("Camera Permission", "Permission denied")
-        }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAddStoryBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        checkLocationPermissionAndFetchLocation()
-        setupUi()
-    }
-
-    private fun setupUi() {
-        binding.apply {
-            btnAdd.setOnClickListener {
-                uploadStory()
-            }
-            btnCamera.setOnClickListener {
-                handleCamera()
-            }
-            btnGallery.setOnClickListener {
-                launcherGallery.launch(IMAGE_TYPE)
-            }
-        }
-    }
-
-    private fun handleCamera() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            openCamera()
-        } else {
-            requestCameraPermission.launch(Manifest.permission.CAMERA)
-        }
-    }
-
-    private fun openCamera() {
-        createImageFile()?.let { file ->
-            selectedImageUri = FileProvider.getUriForFile(requireContext(), "com.pkmkcub.project.fileprovider", file)
-            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE).apply {
-                putExtra(MediaStore.EXTRA_OUTPUT, selectedImageUri)
-            }
-            launcherCamera.launch(cameraIntent)
-        }
-    }
-
-    private fun createImageFile(): File? {
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val storageDir: File? = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir).apply {
-            selectedImageUri = Uri.fromFile(this)
-        }
-    }
-
-    private fun checkLocationPermissionAndFetchLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            fetchLocation()
-        } else {
-            requestLocationPermission()
-        }
-    }
-
-    private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            LOCATION_PERMISSION_REQUEST_CODE
-        )
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun fetchLocation() {
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location ->
-                if (location != null) {
-                    currentLatitude = location.latitude
-                    currentLongitude = location.longitude
-                    updateLocationName()
-                } else {
-                    Toast.makeText(requireContext(), "Failed to get location", Toast.LENGTH_SHORT).show()
+    LaunchedEffect (locationPermissionState.status.isGranted && cameraPermissionState.status.isGranted) {
+        if (locationPermissionState.status.isGranted) {
+            if (ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    location?.let {
+                        currentLocation = it
+                    } ?: run {
+                        Toast.makeText(context, "Failed to get location", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
-    }
-
-    private fun updateLocationName() {
-        val geocoder = Geocoder(requireContext(), Locale.getDefault())
-        try {
-            val addresses = geocoder.getFromLocation(currentLatitude, currentLongitude, 1)
-            if (!addresses.isNullOrEmpty()) {
-                val address = addresses[0]
-                val locationName = address.getAddressLine(0)
-                binding.toogleLoc.text = locationName
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            binding.toogleLoc.text = getString(R.string.unknown_location)
+        } else {
+            locationPermissionState.launchPermissionRequest()
+        }
+        if (!cameraPermissionState.status.isGranted) {
+            cameraPermissionState.launchPermissionRequest()
         }
     }
 
-    private fun uploadStory() {
-        val title = binding.writeTitle.text.toString().trim()
-        val content = binding.writeDesc.text.toString().trim()
-
-        if (content.isEmpty() || title.isEmpty()) {
-            Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (currentLatitude == 0.0 || currentLongitude == 0.0) {
-            Toast.makeText(requireContext(), "Waiting for location...", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        binding.progressBar.visibility = View.VISIBLE
-        selectedImageUri?.let {
-            uploadImageToStorage(it) { imageUrl ->
-                val story = Story(photo_url = imageUrl, title = title, content = content, lon = currentLongitude, lat = currentLatitude)
-                uploadStoryToFirestore(story)
-            }
-        } ?: run {
-            binding.progressBar.visibility = View.GONE
-            Toast.makeText(requireContext(), "Please select an image", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun uploadImageToStorage(imageUri: Uri, onSuccess: (String) -> Unit) {
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val imageRef = storage.reference.child("images/${timeStamp}.jpg")
-
-        imageRef.putFile(imageUri)
-            .addOnSuccessListener {
-                imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    onSuccess(uri.toString())
-                }
-            }
-            .addOnFailureListener { e ->
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(requireContext(), "Failed to upload image: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun uploadStoryToFirestore(story: Story) {
-        firestore.collection("stories")
-            .add(story)
-            .addOnSuccessListener {
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(
-                    requireContext(),
-                    "Story uploaded successfully",
-                    Toast.LENGTH_SHORT
-                ).show()
-                findNavController().navigate(R.id.action_addStory_to_listStory)
-            }
-            .addOnFailureListener { e ->
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(
-                    requireContext(),
-                    "Failed to upload story: ${e.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                fetchLocation()
+    val galleryLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent(),
+        onResult = { uri ->
+            if (uri != null) {
+                imageUri = uri
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Location permission denied",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, "Failed to select image", Toast.LENGTH_SHORT).show()
             }
         }
-    }
+    )
 
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1001
-    }
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview(),
+        onResult = { bitmap ->
+            if (bitmap != null) {
+                val uri = viewModel.saveImageToCache(context, bitmap)
+                imageUri = uri
+            } else {
+                Toast.makeText(context, "Failed to capture image", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(id = R.color.yellow_pattern),
+                    titleContentColor = colorResource(id = R.color.white_base),
+                ),
+                title = {
+                    Text(
+                        text = "Tambah Cerita Pertanian",
+                        fontFamily = FontFamily(Font(R.font.bold)),
+                        color = colorResource(id = R.color.white_base)
+                    )
+                },
+            )
+        },
+        content = { padding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(padding)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ob_bg),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .height(150.dp)
+                            .fillMaxWidth()
+                            .background(Color.LightGray),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (imageUri != null) {
+                            Image(
+                                painter = rememberAsyncImagePainter(imageUri),
+                                contentDescription = "Selected Image",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Text("No Image Selected")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Button(onClick = { cameraLauncher.launch(null) }) {
+                            Text("Camera")
+                        }
+                        Button(onClick = { galleryLauncher.launch("image/*") }) {
+                            Text("Gallery")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = title,
+                        onValueChange = { title = it },
+                        label = { Text("Enter title") },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = description,
+                        onValueChange = { description = it },
+                        label = { Text("Enter description") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Upload Button
+                    Button(
+                        onClick = {
+                            if (title.isNotEmpty() && description.isNotEmpty() && imageUri != null && currentLocation != null) {
+                                isUploading = true
+                                scope.launch {
+                                    viewModel.addStory(
+                                        story = Story(
+                                            title = title,
+                                            content = description,
+                                            photo_url = "",
+                                            lat = currentLocation?.latitude ?: 0.0,
+                                            lon = currentLocation?.longitude ?: 0.0
+                                        ),
+                                        imageUri = imageUri!!,
+                                        onSuccess = {
+                                            isUploading = false
+                                            Toast.makeText(
+                                                context,
+                                                "Story added successfully",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            onNavigateToListStory()
+                                        },
+                                        onFailure = { errorMessage ->
+                                            isUploading = false
+                                            Toast.makeText(
+                                                context,
+                                                errorMessage,
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+                                    )
+                                }
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Please fill all fields, select an image, and enable location access",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        },
+                        enabled = !isUploading,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        if (isUploading) {
+                            CircularProgressIndicator(
+                                color = Color.White,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        } else {
+                            Text("Upload Story")
+                        }
+                    }
+                }
+            }
+        }
+    )
 }
