@@ -1,6 +1,5 @@
 package com.pkmkcub.spectragrow.view.ui.auth
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,18 +25,22 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,6 +55,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pkmkcub.spectragrow.R
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
@@ -60,7 +64,8 @@ fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isChecked by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -117,14 +122,23 @@ fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
                     .background(colorResource(id = R.color.white_base), shape = RoundedCornerShape(8.dp))
             )
 
+            // Forgot password button and logic
             TextButton(
                 onClick = {
                     if (email.isEmpty()) {
-                        Toast.makeText(context, R.string.field_empty, Toast.LENGTH_SHORT).show()
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar("Field email cannot be empty")
+                        }
                     } else {
                         viewModel.forgotPassword(email) { success ->
-                            val messageResId = if (success) R.string.forgot_pw_success else R.string.forgot_pw_unsuccess
-                            Toast.makeText(context, messageResId, Toast.LENGTH_SHORT).show()
+                            coroutineScope.launch {
+                                val message = if (success) {
+                                    "Password change request successfully sent to your registered email."
+                                } else {
+                                    "Password change request failed."
+                                }
+                                snackbarHostState.showSnackbar(message)
+                            }
                         }
                     }
                 },
@@ -142,6 +156,7 @@ fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
                 Checkbox(
                     checked = isChecked,
                     onCheckedChange = { isChecked = it },
+                    Modifier.testTag("TermsCheckbox"),
                     colors = CheckboxDefaults.colors(checkedColor = colorResource(id = R.color.yellow_pattern))
                 )
                 Text(
@@ -156,27 +171,46 @@ fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
 
             Button(
                 onClick = {
-                    if (email.isEmpty() || password.isEmpty()) {
-                        Toast.makeText(context, R.string.field_empty, Toast.LENGTH_SHORT).show()
-                    } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                        Toast.makeText(context, R.string.incorrect_email_format, Toast.LENGTH_SHORT).show()
-                    } else if (password.length < 6) {
-                        Toast.makeText(context, R.string.incorrect_pw_format, Toast.LENGTH_SHORT).show()
-                    } else if (!isChecked) {
-                        Toast.makeText(context, R.string.snk_uncheck, Toast.LENGTH_SHORT).show()
-                    } else {
-                        isLoading = true
-                        viewModel.login(email, password) { success ->
-                            isLoading = false
-                            if (success) {
-                                nav2.navigate("home")
-                            } else {
-                                Toast.makeText(context, R.string.email_password_incorrect, Toast.LENGTH_SHORT).show()
+                    when {
+                        email.isEmpty() || password.isEmpty() -> {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Field cannot be empty")
+                            }
+                        }
+                        !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Incorrect email format")
+                            }
+                        }
+                        password.length < 6 -> {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Password must be at least 6 characters")
+                            }
+                        }
+                        !isChecked -> {
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar("Please accept the terms and conditions")
+                            }
+                        }
+                        else -> {
+                            isLoading = true
+                            viewModel.login(email, password) { success ->
+                                isLoading = false
+                                coroutineScope.launch {
+                                    if (success) {
+                                        snackbarHostState.showSnackbar("Login successful")
+                                        nav2.navigate("home")
+                                    } else {
+                                        snackbarHostState.showSnackbar("Email or password is incorrect")
+                                    }
+                                }
                             }
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("LoginSubmitButton"),
                 colors = ButtonDefaults.buttonColors(colorResource(id = R.color.yellow_pattern)),
                 enabled = !isLoading
             ) {
@@ -202,6 +236,23 @@ fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
                     Text(text = stringResource(id = R.string.tv_register), color = colorResource(id = R.color.black), fontFamily = FontFamily(Font(R.font.bold)))
                 }
             }
+        }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+        ) { data ->
+            Snackbar(
+                snackbarData = data,
+                shape = RoundedCornerShape(16.dp),
+                containerColor = Color.White,
+                contentColor = Color.Black,
+                actionColor = Color.Black,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            )
         }
     }
 }

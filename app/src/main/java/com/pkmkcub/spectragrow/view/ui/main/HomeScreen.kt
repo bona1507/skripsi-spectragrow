@@ -46,6 +46,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,7 +60,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.pkmkcub.spectragrow.R
-import com.pkmkcub.spectragrow.model.Plant
+import com.pkmkcub.spectragrow.core.model.Plant
 import com.pkmkcub.spectragrow.view.ui.auth.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,6 +78,7 @@ fun HomeScreen(nav: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.testTag("HomeScreenTopappbar"),
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = colorResource(id = R.color.yellow_pattern),
                     titleContentColor = colorResource(id = R.color.white_base),
@@ -84,7 +87,9 @@ fun HomeScreen(nav: NavController) {
                     Text(text = stringResource(id = R.string.app_name), fontFamily = FontFamily(Font(R.font.bold)), color = colorResource(id = R.color.white_base))
                 },
                 actions = {
-                    IconButton(onClick = { nav.navigate("liststory") }) {
+                    IconButton(onClick = {
+                        nav.navigate("liststory")
+                    }) {
                         Icon(Icons.Filled.Add, contentDescription = null, tint = colorResource(id = R.color.white_base))
                     }
                     IconButton(onClick = { nav.navigate("maps") }) {
@@ -241,7 +246,6 @@ fun HomeScreen(nav: NavController) {
         }
     }
 }
-
 
 @Composable
 fun PlantItem(plant: Plant, onClick: () -> Unit) {

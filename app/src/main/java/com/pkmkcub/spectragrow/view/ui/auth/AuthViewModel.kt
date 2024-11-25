@@ -19,10 +19,10 @@ import java.util.UUID
 
 class AuthViewModel(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
-    var credentialManager: CredentialManager? = null
+    private var credentialManager: CredentialManager? = null
 ) : ViewModel() {
 
-    fun initializeCredentialManager(context: Context) {
+    private fun initializeCredentialManager(context: Context) {
         credentialManager = CredentialManager.create(context)
     }
 

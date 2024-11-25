@@ -74,5 +74,7 @@
     <string name="high_details"><b>Pengaruh terhadap produktivitas:</b> \n<b>Suhu:</b> Semakin tinggi elevasi, semakin rendah suhu, yang bisa memperlambat pertumbuhan tanaman.\n<b>Cahaya Matahari:</b> Di elevasi tinggi, cahaya matahari lebih kuat, yang bisa meningkatkan fotosintesis tetapi juga menyebabkan stres.\n<b>Kelembapan:</b> Di ketinggian tinggi, kelembapan lebih rendah, sehingga risiko kekeringan lebih besar. \nData ini memiliki satuan meter diatas permukaan laut (mdpl) dan didapatkan dari elevation API</string>
     <string name="temp">Suhu</string>
     <string name="high">Elevasi</string>
+    <string name="title_story">Cerita Pertanian</string>
+    <string name="title_maps">Peta Pertanian</string>
 
 </resources>

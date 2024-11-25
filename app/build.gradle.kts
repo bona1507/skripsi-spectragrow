@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
     alias(libs.plugins.compose.compiler)
-    id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
@@ -16,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "com.pkmkcub.spectragrow"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 34
         versionCode = 5
         versionName = "1.6"
@@ -41,32 +40,31 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
-        viewBinding = true
         buildConfig = true
         compose = true
     }
+    dynamicFeatures += setOf(":story", ":maps")
 }
 
 dependencies {
-
+    implementation(project(":core"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.maps)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.places)
-    implementation(libs.androidx.swiperefreshlayout)
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.storage)
+    implementation(libs.places) {
+        exclude(group = "com.google.j2objc", module = "j2objc-annotations")
+    }
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.storage.ktx)
     implementation(libs.androidx.espresso.contrib) {
         exclude(group = "com.google.protobuf", module = "protobuf-lite")
     }
     implementation(libs.androidx.uiautomator)
     implementation(libs.androidx.espresso.intents)
-    implementation(libs.androidx.foundation.android)
+    implementation(libs.androidx.ui.test.junit4.android)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
@@ -77,7 +75,9 @@ dependencies {
 
     //Firebase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.analytics) {
+        exclude(group = "com.google.j2objc", module = "j2objc-annotations")
+    }
     implementation(libs.firebase.auth.ktx)
     implementation(libs.play.services.auth)
     implementation(libs.firebase.perf)
@@ -95,21 +95,10 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.kotlinx.coroutines.test)
 
-    // Koin
-    implementation(libs.koin.core)
-    implementation(libs.koin.android)
-
     // Volley
-    implementation(libs.volley)
-
-    // Coil
-    implementation(libs.coil)
-
-    implementation(libs.maps.utils.ktx)
 
     // Crashlytics
     implementation(libs.firebase.crashlytics)
-
     implementation(libs.integrity)
 
     // Mockito
@@ -123,7 +112,6 @@ dependencies {
 
     // Compose
     implementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.material.icons.extended)
@@ -132,4 +120,10 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.maps.compose)
     implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.foundation.android)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(project(":maps"))
+    androidTestImplementation(project(":story"))
+    androidTestImplementation(libs.androidx.navigation.testing)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }

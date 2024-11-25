@@ -13,12 +13,6 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="mapsFlow() (1)">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="mapsFlow() (2)">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="loginFlow()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
@@ -33,7 +27,10 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="loginFlow() (1)">
+      <SelectionState runConfigName="testLoginUI">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="TestLoginFlow">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Spectragrow"
 include(":app")
- 
+include(":core")
+include(":story")
+include(":maps")
