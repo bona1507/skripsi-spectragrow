@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -114,30 +115,31 @@ fun MapsScreen(navController: NavController) {
         Box(Modifier.fillMaxSize()) {
             var text by remember { mutableStateOf("") }
             GoogleMap(
-                modifier = Modifier.matchParentSize(),
+                modifier = Modifier.matchParentSize().testTag("Maps"),
                 properties = properties.value,
                 uiSettings = uiSettings,
                 cameraPositionState = cameraPositionState,
-                onMapLongClick = { latLng ->
-                    markerPosition = latLng
-                    viewModel.fetchElevation(latLng)
-                    viewModel.fetchCurrentTemperature(latLng)
-                    viewModel.fetchPlantDataByLocation(latLng)
-                    streetName = try {
-                        val addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-                        if (!addressList.isNullOrEmpty()) {
-                            addressList[0].getAddressLine(0) ?: "Unknown"
-                        } else {
-                            "Unknown"
+                onMapClick = { latLng ->
+                    if (markerPosition==null) {
+                        markerPosition = latLng
+                        viewModel.fetchElevation(latLng)
+                        viewModel.fetchCurrentTemperature(latLng)
+                        viewModel.fetchPlantDataByLocation(latLng)
+                        streetName = try {
+                            val addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+                            if (!addressList.isNullOrEmpty()) {
+                                addressList[0].getAddressLine(0) ?: "Unknown"
+                            } else {
+                                "Unknown"
+                            }
+                        } catch (e: Exception) {
+                            "Error getting address"
                         }
-                    } catch (e: Exception) {
-                        "Error getting address"
+                        showCard = true
+                    } else {
+                        markerPosition = null
+                        showCard = false
                     }
-                    showCard = true
-                },
-                onMapClick = {
-                    markerPosition = null
-                    showCard = false
                 }
             ) {
                 markerPosition?.let { position ->
@@ -162,7 +164,8 @@ fun MapsScreen(navController: NavController) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
-                        .background(colorResource(id = R.color.white_base)),
+                        .background(colorResource(id = R.color.white_base))
+                        .testTag("SearchBar"),
                     placeholder = { Text(text = "Search places...") }
                 )
             }
@@ -211,6 +214,7 @@ fun ResultCard(viewModel: MapsViewModel = viewModel(), navController: NavControl
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .testTag("ResultCard")
     ) {
         Card(
             modifier = Modifier

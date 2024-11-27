@@ -1,23 +1,16 @@
 package com.pkmkc.spectragrow.story
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
-import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.pkmkcub.spectragrow.core.model.Story
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.UUID
 
 class StoryViewModel : ViewModel() {
 
@@ -111,25 +104,6 @@ class StoryViewModel : ViewModel() {
         uploadTask.addOnProgressListener { taskSnapshot ->
             val progress = (100 * taskSnapshot.bytesTransferred / taskSnapshot.totalByteCount).toInt()
             _uploadProgress.value = progress
-        }
-    }
-
-    fun saveImageToCache(context: Context, bitmap: Bitmap): Uri? {
-        val fileName = "image_${UUID.randomUUID()}.jpg"
-        val cacheDir = context.cacheDir
-
-        val file = File(cacheDir, fileName)
-
-        try {
-            val fileOutputStream = FileOutputStream(file)
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
-            fileOutputStream.flush()
-            fileOutputStream.close()
-
-            return FileProvider.getUriForFile(context, "com.pkmkcub.spectragrow.fileprovider", file)
-        } catch (e: IOException) {
-            e.printStackTrace()
-            return null
         }
     }
 }

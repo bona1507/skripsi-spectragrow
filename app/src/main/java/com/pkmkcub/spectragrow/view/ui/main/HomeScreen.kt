@@ -87,17 +87,13 @@ fun HomeScreen(nav: NavController) {
                     Text(text = stringResource(id = R.string.app_name), fontFamily = FontFamily(Font(R.font.bold)), color = colorResource(id = R.color.white_base))
                 },
                 actions = {
-                    IconButton(onClick = {
-                        nav.navigate("liststory")
-                    }) {
+                    IconButton(onClick = {nav.navigate("liststory")}, modifier = Modifier.testTag("StoryButton")) {
                         Icon(Icons.Filled.Add, contentDescription = null, tint = colorResource(id = R.color.white_base))
                     }
-                    IconButton(onClick = { nav.navigate("maps") }) {
+                    IconButton(onClick = { nav.navigate("maps")}, modifier = Modifier.testTag("MapsButton")) {
                         Icon(Icons.Filled.Map, contentDescription = null, tint = colorResource(id = R.color.white_base))
                     }
-                    IconButton(onClick = { authViewModel.logout(
-                        logoutCallback = { nav.navigate("onboarding") }
-                    )}) {
+                    IconButton(onClick = { authViewModel.logout(logoutCallback = { nav.navigate("onboarding")})}, modifier = Modifier.testTag("LogoutButton")) {
                         Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = null, tint = colorResource(id = R.color.white_base))
                     }
                 }
@@ -143,6 +139,7 @@ fun HomeScreen(nav: NavController) {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 10.dp)
+                            .testTag("SearchBar")
                     )
                     LazyRow(
                         modifier = Modifier
@@ -327,7 +324,8 @@ fun SoilTable(plant: Plant) {
         rows.forEach { (label, value) ->
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .testTag("PlantList"),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(

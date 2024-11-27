@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -37,7 +38,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.pkmkc.spectragrow.story.R
+import com.pkmkcub.spectragrow.R
 import com.pkmkc.spectragrow.story.StoryViewModel
 import com.pkmkcub.spectragrow.core.model.Story
 
@@ -64,7 +65,7 @@ fun ListStoryScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddStory, containerColor = colorResource(id = R.color.yellow_pattern)) {
+            FloatingActionButton(onClick = onAddStory, containerColor = colorResource(id = R.color.yellow_pattern), modifier = Modifier.testTag("AddStoryFAB")) {
                 Icon(Icons.Default.Add, contentDescription = "Add Story", tint = colorResource(id = R.color.white_base))
             }
         }
@@ -79,7 +80,7 @@ fun ListStoryScreen(
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             } else {
-                LazyColumn {
+                LazyColumn(modifier = Modifier.testTag("ListStory")) {
                     items(stories) { story ->
                         StoryItem(story, onStoryClick)
                     }

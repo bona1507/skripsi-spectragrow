@@ -6,6 +6,7 @@ composeBom = "2024.11.00"
 coreTesting = "2.2.0"
 credentials = "1.5.0-beta01"
 firebaseBom = "33.6.0"
+guava = "33.3.0-android"
 integrity = "1.4.0"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
@@ -43,6 +44,7 @@ firebaseStorageKtx = "21.0.1"
 navigationCommonKtx = "2.8.4"
 navigationRuntimeKtx = "2.8.4"
 composeVersion = "1.7.5"
+cameraxVersion = "1.4.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -59,6 +61,7 @@ androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "composeVersion" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
 firebase-perf = { module = "com.google.firebase:firebase-perf" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "mapsCompose" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
@@ -96,6 +99,9 @@ firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage
 androidx-navigation-common-ktx = { group = "androidx.navigation", name = "navigation-common-ktx", version.ref = "navigationCommonKtx" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-ui-test-junit4-android = { group = "androidx.compose.ui", name = "ui-test-junit4-android", version.ref = "composeVersion" }
+androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraxVersion" }
+camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraxVersion" }
+camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraxVersion" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }

@@ -1,5 +1,6 @@
 package com.pkmkcub.spectragrow.view.ui.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,21 +26,18 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -55,7 +53,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pkmkcub.spectragrow.R
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
@@ -64,8 +61,7 @@ fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
     var isPasswordVisible by remember { mutableStateOf(false) }
     var isChecked by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current // Get the current context for Toast
 
     Box(
         modifier = Modifier
@@ -126,19 +122,15 @@ fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
             TextButton(
                 onClick = {
                     if (email.isEmpty()) {
-                        coroutineScope.launch {
-                            snackbarHostState.showSnackbar("Field email cannot be empty")
-                        }
+                        Toast.makeText(context, "Kolom email perlu diisi", Toast.LENGTH_SHORT).show()
                     } else {
                         viewModel.forgotPassword(email) { success ->
-                            coroutineScope.launch {
-                                val message = if (success) {
-                                    "Password change request successfully sent to your registered email."
-                                } else {
-                                    "Password change request failed."
-                                }
-                                snackbarHostState.showSnackbar(message)
+                            val message = if (success) {
+                                "Email ganti password berhasil dikirim."
+                            } else {
+                                "Email ganti password gagal dikirim."
                             }
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
                         }
                     }
                 },
@@ -173,36 +165,26 @@ fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
                 onClick = {
                     when {
                         email.isEmpty() || password.isEmpty() -> {
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar("Field cannot be empty")
-                            }
+                            Toast.makeText(context, "Kolom tidak boleh kosong", Toast.LENGTH_SHORT).show()
                         }
                         !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar("Incorrect email format")
-                            }
+                            Toast.makeText(context, "Format email salah", Toast.LENGTH_SHORT).show()
                         }
                         password.length < 6 -> {
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar("Password must be at least 6 characters")
-                            }
+                            Toast.makeText(context, "Kata sandi harus memiliki minimal 6 karakter", Toast.LENGTH_SHORT).show()
                         }
                         !isChecked -> {
-                            coroutineScope.launch {
-                                snackbarHostState.showSnackbar("Please accept the terms and conditions")
-                            }
+                            Toast.makeText(context, "Silakan setujui syarat dan ketentuan", Toast.LENGTH_SHORT).show()
                         }
                         else -> {
                             isLoading = true
                             viewModel.login(email, password) { success ->
                                 isLoading = false
-                                coroutineScope.launch {
-                                    if (success) {
-                                        snackbarHostState.showSnackbar("Login successful")
-                                        nav2.navigate("home")
-                                    } else {
-                                        snackbarHostState.showSnackbar("Email or password is incorrect")
-                                    }
+                                if (success) {
+                                    Toast.makeText(context, "Login berhasil", Toast.LENGTH_SHORT).show()
+                                    nav2.navigate("home")
+                                } else {
+                                    Toast.makeText(context, "Email atau kata sandi salah", Toast.LENGTH_SHORT).show()
                                 }
                             }
                         }
@@ -221,6 +203,7 @@ fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
                 }
             }
 
+
             Spacer(modifier = Modifier.height(8.dp))
 
             Column(
@@ -237,22 +220,6 @@ fun LoginScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) {
                 }
             }
         }
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp)
-        ) { data ->
-            Snackbar(
-                snackbarData = data,
-                shape = RoundedCornerShape(16.dp),
-                containerColor = Color.White,
-                contentColor = Color.Black,
-                actionColor = Color.Black,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
-        }
     }
 }
+

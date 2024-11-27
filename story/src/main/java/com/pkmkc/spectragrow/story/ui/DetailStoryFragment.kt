@@ -32,7 +32,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.pkmkc.spectragrow.story.R
+import com.pkmkcub.spectragrow.R
 import com.pkmkc.spectragrow.story.StoryViewModel
 import com.pkmkcub.spectragrow.core.model.Story
 

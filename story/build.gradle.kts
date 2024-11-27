@@ -55,4 +55,8 @@ dependencies {
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.foundation.android)
     androidTestImplementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.view)
+    implementation(libs.guava)
 }
