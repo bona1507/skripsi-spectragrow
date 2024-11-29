@@ -30,6 +30,7 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 }
@@ -37,26 +38,10 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":app"))
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.play.services.location)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.firebase.firestore.ktx)
-    implementation(libs.firebase.storage.ktx)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.material)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.coil.compose)
-    implementation(libs.maps.compose)
-    implementation(libs.accompanist.permissions)
-    implementation(libs.androidx.foundation.android)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
+    implementation(libs.guava)
+
+    // Camera
     implementation(libs.androidx.camera.camera2)
     implementation(libs.camera.lifecycle)
     implementation(libs.camera.view)
-    implementation(libs.guava)
 }

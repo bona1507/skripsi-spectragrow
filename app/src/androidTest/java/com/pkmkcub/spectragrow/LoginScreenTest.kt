@@ -609,8 +609,8 @@ class UITestFlow {
         val dataReceivedKb = (finalRx - initialRx) / 1024.0
 
         // Logging untuk performa aplikasi
-        Log.d(testName, "Penggunaan Memori Tertinggi: ${String.format("%.2f", peakMemoryUsageMb)} MB")
         Log.d(testName, "Waktu Penggunaan CPU: $peakCpuUsage ms")
+        Log.d(testName, "Penggunaan Memori Tertinggi: ${String.format("%.2f", peakMemoryUsageMb)} MB")
         Log.d(testName, "Data Unggah: ${String.format("%.2f", dataSentKb)} KB")
         Log.d(testName, "Data Unduh: ${String.format("%.2f", dataReceivedKb)} KB")
         Log.d(testName, "Test Runtime: ${String.format("%.2f", elapsedTimeMillis / 1000.0)} seconds")

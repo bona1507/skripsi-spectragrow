@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -124,7 +127,7 @@ fun RegisterScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) 
                 trailingIcon = {
                     IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                         Icon(
-                            painter = painterResource(if (isPasswordVisible) R.drawable.visibility_on else R.drawable.visibility_off),
+                            imageVector = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                             contentDescription = null
                         )
                     }
@@ -148,7 +151,7 @@ fun RegisterScreen(nav2: NavController, viewModel: AuthViewModel = viewModel()) 
                 trailingIcon = {
                     IconButton(onClick = { isConfirmPasswordVisible = !isConfirmPasswordVisible }) {
                         Icon(
-                            painter = painterResource(if (isConfirmPasswordVisible) R.drawable.visibility_on else R.drawable.visibility_off),
+                            imageVector = if (isConfirmPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
                             contentDescription = null
                         )
                     }

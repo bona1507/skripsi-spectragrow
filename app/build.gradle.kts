@@ -1,12 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
     alias(libs.plugins.compose.compiler)
-    id("kotlin-parcelize")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
     id("com.google.firebase.firebase-perf")
+    id("com.google.firebase.crashlytics")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -21,6 +19,9 @@ android {
         versionName = "1.6"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "MAPS_API_KEY", "\"AIzaSyBV_FNrjVFisLwuOrAvhpRkxLCXDhBL0bs\"")
+        buildConfigField("String", "OPENWEATHERMAP_API_KEY", "\"d0c1293638c591e305574e585d92e9a8\"")
+        buildConfigField("String", "WEB_CLIENT_ID", "\"966096908244-p1q5rg1og554vi9r4250nv2juera9d38.apps.googleusercontent.com\"")
     }
 
     buildTypes {
@@ -48,82 +49,31 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.constraintlayout)
-    implementation(libs.play.services.maps)
-    implementation(libs.places) {
-        exclude(group = "com.google.j2objc", module = "j2objc-annotations")
-    }
-    implementation(libs.firebase.firestore.ktx)
-    implementation(libs.firebase.storage.ktx)
-    implementation(libs.androidx.espresso.contrib) {
-        exclude(group = "com.google.protobuf", module = "protobuf-lite")
-    }
-    implementation(libs.androidx.uiautomator)
-    implementation(libs.androidx.espresso.intents)
-    implementation(libs.androidx.ui.test.junit4.android)
+    implementation(libs.firebase.perf)
+    androidTestImplementation(project(":maps"))
+    androidTestImplementation(project(":story"))
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    //Splash screen
-    implementation(libs.androidx.core.splashscreen)
-
-    //Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics) {
-        exclude(group = "com.google.j2objc", module = "j2objc-annotations")
+    androidTestImplementation(libs.androidx.espresso.contrib) {
+        exclude(group = "com.google.protobuf", module = "protobuf-lite")
     }
-    implementation(libs.firebase.auth.ktx)
-    implementation(libs.play.services.auth)
-    implementation(libs.firebase.perf)
+    androidTestImplementation(libs.androidx.espresso.intents)
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.ui.test.junit4.android)
+    androidTestImplementation(libs.androidx.navigation.testing)
 
-    configurations.all {
-        exclude(group = "androidx.biometric", module = "biometric")
-    }
+    // Debugging
+    debugImplementation(libs.androidx.ui.test.manifest)
 
     // Identity
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
 
-    // Coroutines
-    implementation(libs.kotlinx.coroutines.android)
-    testImplementation(libs.kotlinx.coroutines.test)
-
-    // Volley
-
-    // Crashlytics
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.integrity)
-
-    // Mockito
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.inline)
-    testImplementation(libs.androidx.core.testing)
-
-    // Espresso
-    androidTestImplementation(libs.androidx.runner)
-    androidTestImplementation(libs.androidx.rules)
-
-    // Compose
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.material3)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.material)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.coil.compose)
-    implementation(libs.maps.compose)
-    implementation(libs.accompanist.permissions)
-    implementation(libs.androidx.foundation.android)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(project(":maps"))
-    androidTestImplementation(project(":story"))
-    androidTestImplementation(libs.androidx.navigation.testing)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    // Splash screen
+    implementation(libs.androidx.core.splashscreen)
 }
